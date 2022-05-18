@@ -1,19 +1,12 @@
-using MOCK_Course.DAL;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using Microsoft.OpenApi.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using MOCK_CourseAPI.Extensions;
+using MOCK_CourseAPI.Extensions.ServiceExtensions;
+using Microsoft.AspNetCore.HttpOverrides;
+using System.IO;
+using NLog;
 
 namespace MOCK_CourseAPI
 {
@@ -22,6 +15,9 @@ namespace MOCK_CourseAPI
     {
         public Startup(IConfiguration configuration)
         {
+            LogManager.LoadConfiguration(string.Concat(Directory.GetCurrentDirectory(),
+"/nlog.config"));
+            Configuration = configuration;
             Configuration = configuration;
         }
 
@@ -30,50 +26,20 @@ namespace MOCK_CourseAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            //Connect to Database using EF Core with SQL Server
-            services.AddDbContext<AppDbContext>(options =>
-            {
-                //CVPANHTNT6-59
-                options.UseSqlServer(Configuration.GetConnectionString("MOCK_Course"));
-            });
+            services.ConfigureCos();
+            services.ConfigureIISIntegration();
+            services.ConfigureIdentity();
+            services.ConfigureSwagger();
+            services.ConfigureLoggerService();
+
+            services.ConfigureDbContext(Configuration);
+            services.ConfigureAuthentication(Configuration);
+
             services.AddControllers();
 
-            //Config identity
-            IdentityConfig.Initializer(services);
 
-            //Add authentication
-            IdentityConfig.AddAuthentication(services, Configuration);
-
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Blogger_BE", Version = "v1" });
-                c.AddSecurityDefinition(name: "Bearer", securityScheme: new OpenApiSecurityScheme
-                {
-                    Name = "Authorization",
-                    Description = "Enter the Bearer Authorization string as following: `Bearer Generated-JWT-Token`",
-                    In = ParameterLocation.Header,
-                    Type = SecuritySchemeType.ApiKey,
-                    Scheme = "Bearer"
-                });
-
-                c.AddSecurityRequirement(new OpenApiSecurityRequirement
-                {
-                    {
-                        new OpenApiSecurityScheme
-                        {
-                            Name = "Bearer",
-                            In = ParameterLocation.Header,
-                            Reference = new OpenApiReference
-                            {
-                                Id = "Bearer",
-                                Type = ReferenceType.SecurityScheme
-                            }
-                        },
-                        new List<string>()
-                    }
-                });
-            });
         }
+
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -84,8 +50,20 @@ namespace MOCK_CourseAPI
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "MOCK_CourseAPI v1"));
             }
+            else
+            {
+                app.UseHsts();
+            }
 
             app.UseHttpsRedirection();
+            app.UseStaticFiles();
+
+            app.UseCors("CorsPolicy");
+
+            app.UseForwardedHeaders(new ForwardedHeadersOptions
+            {
+                ForwardedHeaders = ForwardedHeaders.All
+            });
 
             app.UseRouting();
 
