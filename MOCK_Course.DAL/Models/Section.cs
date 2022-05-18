@@ -7,13 +7,12 @@ using System.Threading.Tasks;
 
 namespace MOCK_Course.DAL.Models
 {
-    public class Category : BaseEntity
+    public class Section : BaseEntity
     {
-        [Required]  
+        [Required]
         [MaxLength(100)]
-        public string Name { get; set; }
-        public string Description { get; set; }
-        public List<CategoryCourse> CategoryCourses { get; set; }
-
+        public string Title { get; set; }
+        public int TotalTime { get; set; }
+        public List<Assignment> Assignments { get; set; }
     }
 }
