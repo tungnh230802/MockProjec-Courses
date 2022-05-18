@@ -1,15 +1,15 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Identity;
+using System;
 
-namespace MOCK_Course.DAL.Models
+namespace Course.DAL.Models
 {
-    public partial class BaseEntity<T>
+    public class UserBase : IdentityUser<Guid>
     {
-        public BaseEntity()
+        public UserBase()
         {
             CreatedAt = DateTime.UtcNow;
             IsActive = true;
         }
-        public T Id { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
         public string CreatedBy { get; set; }

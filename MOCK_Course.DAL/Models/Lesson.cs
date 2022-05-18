@@ -1,18 +1,18 @@
-﻿using System;
+﻿using MOCK_Course.DAL.Models;
+using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace MOCK_Course.DAL.Models
+namespace Course.DAL.Models
 {
-    class Lesson : BaseEntity
+    public class Lesson : BaseEntity<Guid>
     {
-        [Required]
-        [MaxLength(100)]
         public string Title { get; set; }
         public string VideoUrl { get; set; }
         public int TotalTime { get; set; }
+
+        public Guid SectionId { get; set; }
+        public Section Section { get; set; }
+
+        public ICollection<LessonCompletion> LessonCompletions { get; set; }
     }
 }

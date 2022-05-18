@@ -41,7 +41,7 @@ namespace MOCK_CourseAPI.Extensions.ServiceExtensions
 
         public static void ConfigureIdentity(this IServiceCollection services)
         {
-            services.AddIdentity<AppUser, IdentityRole>(options =>
+            services.AddIdentity<AppUser, IdentityRole<Guid>>(options =>
             {
                 //Configure Password
                 options.Password.RequireDigit = false; // Not mandatory digit
@@ -69,12 +69,13 @@ namespace MOCK_CourseAPI.Extensions.ServiceExtensions
             }).AddEntityFrameworkStores<AppDbContext>().AddDefaultTokenProviders();
         }
 
-        public static void ConfigureDbContext(this IServiceCollection services, IConfiguration configuration)
+        public static void ConfigureSqlContext(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddDbContext<AppDbContext>(options =>
             {
                 //CVPANHTNT6-59
-                options.UseSqlServer(configuration.GetConnectionString("MOCK_Course"));
+                options.UseSqlServer(configuration.GetConnectionString("MOCK_Course"), b =>
+b.MigrationsAssembly("CourseAPI"));
             });
         }
 

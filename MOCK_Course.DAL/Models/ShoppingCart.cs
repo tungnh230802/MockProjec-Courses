@@ -1,17 +1,18 @@
 ﻿using MOCK_Course.DAL.Models;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace Course.DAL.Models
 {
-    public class Section : BaseEntity<Guid>
+    public class ShoppingCart : BaseEntity<Guid>
     {
-        public string Title { get; set; }
-        public int TotalTime { get; set; }
+        public Guid UserId { get; set; }
+        public AppUser User { get; set; }
 
         public Guid CourseId { get; set; }
         public Courses Course { get; set; }
-
-        public ICollection<Lesson> Lessons { get; set; }
     }
 }

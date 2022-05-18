@@ -1,19 +1,15 @@
-﻿using System;
+﻿using MOCK_Course.DAL.Models;
+using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace MOCK_Course.DAL.Models
+namespace Course.DAL.Models
 {
-    public class Category : BaseEntity
+    public class Category : BaseEntity<Guid>
     {
-        [Required]  
-        [MaxLength(100)]
         public string Name { get; set; }
-        public string Description { get; set; }
-        public List<CategoryCourse> CategoryCourses { get; set; }
-
+        public Guid? ParentcategoryId { get; set; }
+        public Category Parentcategory { get; set; }
+        public ICollection<Category> categories { get; set; }
+        public ICollection<Courses> courses { get; set; }
     }
 }

@@ -13,4 +13,8 @@
     <Folder Include="DTOs\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\MOCK_Course.DAL\Course.DAL.csproj" />
+  </ItemGroup>
+
 </Project>

@@ -1,17 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using MOCK_Course.DAL.Models;
+using System;
 
-namespace MOCK_Course.DAL.Models
+namespace Course.DAL.Models
 {
-    public class CourseReview :BaseEntity
+    public class CourseReview : BaseEntity<Guid>
     {
-        //[ForeignKey("Enrollment")]
+        public string Content { get; set; }
+        public int Rating { get; set; }
+
         public Guid EnrollmentId { get; set; }
         public Enrollment Enrollment { get; set; }
-        public string Content { get; set; }
     }
 }

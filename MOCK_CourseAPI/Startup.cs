@@ -15,9 +15,9 @@ namespace MOCK_CourseAPI
     {
         public Startup(IConfiguration configuration)
         {
-            LogManager.LoadConfiguration(string.Concat(Directory.GetCurrentDirectory(),
-"/nlog.config"));
-            Configuration = configuration;
+            string configFileLog = string.Concat(Directory.GetCurrentDirectory(), "/nlog.config");
+            LogManager.LoadConfiguration(configFileLog);
+
             Configuration = configuration;
         }
 
@@ -32,7 +32,7 @@ namespace MOCK_CourseAPI
             services.ConfigureSwagger();
             services.ConfigureLoggerService();
 
-            services.ConfigureDbContext(Configuration);
+            services.ConfigureSqlContext(Configuration);
             services.ConfigureAuthentication(Configuration);
 
             services.AddControllers();
