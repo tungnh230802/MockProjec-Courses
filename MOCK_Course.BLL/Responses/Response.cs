@@ -1,26 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace MOCK_Course.BLL.Responses
+﻿namespace BlogBLL.Response
 {
-    public class Response <T>
+    public class Response<T> : IResponse<T> where T : class
     {
-        public bool IsSuccess { get; set; }
-        public int? Error { get; set; }
+        public bool IsSucceeded { get; set; }//true or false
         public string Message { get; set; }
+        public int? Error { get; set; }
         public T Data { get; set; }
-        public Response()
+        public Response(bool isSucceeded, T data, string message, int? error)
         {
-
-        }
-        public Response(bool isSuccess, int error, string message)
-        {
-            IsSuccess = isSuccess;
-            Error = error;
+            IsSucceeded = isSucceeded;
+            Data = data;
             Message = message;
+            Error = error;
+        }
+
+        public Response(bool isSucceeded, T data)
+        {
+            IsSucceeded = isSucceeded;
+            Data = data;
         }
     }
 }
